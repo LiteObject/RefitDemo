@@ -53,7 +53,7 @@
             var response = await client.GetAsync("/api/users");
 
             // ASSERT
-            using Stream utf8Json = await response.Content.ReadAsStreamAsync();
+            await using Stream utf8Json = await response.Content.ReadAsStreamAsync();
             var users = await JsonSerializer.DeserializeAsync<Root>(utf8Json, serializerOptions);
 
             Assert.NotNull(users);
