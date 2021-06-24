@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
-
+    using Refit;
     using RefitDemo.API.Models;
 
     /// <summary>
@@ -57,22 +57,46 @@
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1)
         {
-            /* var randomUserApi = RestService.For<IUserService>("https://randomuser.me");
+            /*var randomUserApi = RestService.For<IUserService>("https://randomuser.me");
             var users = randomUserApi.GetAsync(1); */
 
             // Call using Refit typed client
-            /* var users = await this.userService.GetAsync(page);
-            return this.Ok(users); */
+            var users = await this.userService.GetAsync(page);
+            return this.Ok(users);
 
             // Call using http named client
-            var users = await this.GetUserUsingHttpClient();
+            /*var users = await this.GetUserUsingHttpClient();
 
             if (users is null)
             {
                 return this.NotFound();
             }
 
+            return this.Ok(users); */
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            /*var randomUserApi = RestService.For<IUserService>("https://randomuser.me");
+            var users = randomUserApi.GetAsync(1); */
+
+            // Call using Refit typed client
+            var users = await this.userService.GetByIdAsync(id);
             return this.Ok(users);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute]int id, [FromBody]UpdateUser user) 
+        {
+            if (!ModelState.IsValid) 
+            {
+                return this.BadRequest();
+            }
+
+            var response = await this.userService.UpdateUserAsync(id, user);
+
+            return this.Ok(response);
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ namespace RefitDemo.API
     using Polly.Extensions.Http;
 
     using Refit;
+    using RefitDemo.API.Middleware;
 
     /// <summary>
     /// The startup.
@@ -61,7 +62,10 @@ namespace RefitDemo.API
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            // Global exception handler
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });                        
         }
 
         /// <summary>
