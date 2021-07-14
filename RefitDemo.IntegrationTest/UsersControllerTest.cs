@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
     using System.IO;
+    using System.Net;
     using System.Text.Json;
     using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@
         /// The <see cref="Task"/>.
         /// </returns>
         [Fact]
-        public async Task BasicEndPointTest()
+        public async Task Get_Users_Should_Return_200_OK_With_User_Collection()
         {
             // ARRANGE
             var hostBuilder = new HostBuilder()
@@ -53,6 +54,7 @@
             var response = await client.GetAsync("/api/users");
 
             // ASSERT
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             await using Stream utf8Json = await response.Content.ReadAsStreamAsync();
             var users = await JsonSerializer.DeserializeAsync<Root>(utf8Json, serializerOptions);
 
